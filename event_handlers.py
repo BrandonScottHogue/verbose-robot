@@ -16,7 +16,6 @@ def register_event_handlers(client, gift_tracker):
         print("Connected to Room ID:", client.room_id)
 
     @client.on("gift")
-    @client.on("gift")
     async def on_gift(event: GiftEvent):
         user_id = event.user.unique_id
         gift_id = event.gift.id

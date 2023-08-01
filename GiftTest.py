@@ -30,18 +30,22 @@ async def on_connect(_: ConnectEvent):
 # Define how you want to handle gift events
 @client.on("gift")
 async def on_gift(event: GiftEvent):
-    # Add the gift to the gift_data dictionary
-    if event.user.unique_id not in gift_data:
-        gift_data[event.user.unique_id] = 0
-    gift_data[event.user.unique_id] += event.gift.count
+    user_id = event.user.unique_id
+    gift_id = event.gift.id
+    gift_count = event.gift.count
+    gift_price = client.available_gifts[gift_id].diamond_count
 
-    # If the gift is the end of a streak, log it to the console
-    if not event.gift.streaking:
-        logging.info(f"Received a gift from {event.user.unique_id}: {event.gift.info.name} x {event.gift.count}")
+    if event.gift.streakable and not event.gift.streaking:
+        total_gift_value = gift_count * gift_price
+        gift_tracker.update_gift_data(user_id, total_gift_value)
+        print(
+            f"{event.user.unique_id} sent {gift_count}x \"{client.available_gifts[gift_id].name}\" for a total value of {total_gift_value}")
+    elif not event.gift.streakable:
+        total_gift_value = gift_count * gift_price
+        gift_tracker.update_gift_data(user_id, total_gift_value)
+        print(
+            f"{event.user.unique_id} sent \"{client.available_gifts[gift_id].name}\" for a total value of {total_gift_value}")
 
-    # Save the gift_data dictionary to a pickle file
-    with open('gift_data.pkl', 'wb') as f:
-        pickle.dump(gift_data, f)
 
 
 # Define how you want to handle comment events
