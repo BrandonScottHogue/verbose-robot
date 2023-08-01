@@ -18,6 +18,7 @@ class GiftTracker:
     def update_gift_data(self, user_id, gift_count):
         if user_id not in self.gift_data:
             self.gift_data[user_id] = 0
-        self.gift_data[user_id] += gift_count
+        new_gift_count = self.gift_data[user_id] + gift_count
+        self.gift_data[user_id] = max(new_gift_count, 0)
         with open(self.pickle_file, 'wb') as f:
             pickle.dump(self.gift_data, f)
