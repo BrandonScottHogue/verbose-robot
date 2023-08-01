@@ -1,10 +1,10 @@
 # event_handlers.py
 import logging
 from TikTokLive.types.events import CommentEvent, GiftEvent, DisconnectEvent, ConnectEvent
-from gift_tracker import GiftTracker
 from image_generator import ImageGenerator
-import webuiapi
 import os
+import tts_module
+import random
 
 # Instantiate the image generator
 image_generator = ImageGenerator()
@@ -14,6 +14,7 @@ def register_event_handlers(client, gift_tracker):
     @client.on("connect")
     async def on_connect(_: ConnectEvent):
         print("Connected to Room ID:", client.room_id)
+        tts_module.generate_speech("Connected to room. I'm here everyone!")
 
     @client.on("gift")
     async def on_gift(event: GiftEvent):
@@ -27,11 +28,13 @@ def register_event_handlers(client, gift_tracker):
             gift_tracker.update_gift_data(user_id, total_gift_value)
             print(
                 f"{event.user.unique_id} sent {gift_count}x \"{client.available_gifts[gift_id].name}\" for a total value of {total_gift_value}")
+            tts_module.generate_speech(choose_thanksdialog(client.available_gifts[gift_id].name))
         elif not event.gift.streakable:
             total_gift_value = gift_count * gift_price
             gift_tracker.update_gift_data(user_id, total_gift_value)
             print(
                 f"{event.user.unique_id} sent \"{client.available_gifts[gift_id].name}\" for a total value of {total_gift_value}")
+            tts_module.generate_speech(choose_thanksdialog(client.available_gifts[gift_id].name))
 
     # Define how you want to handle comment events
     @client.on('comment')
@@ -55,3 +58,14 @@ def register_event_handlers(client, gift_tracker):
 
     # Define handling an event via "callback"
     client.add_listener("comment", on_comment)
+
+def choose_thanksdialog(gift_name):
+    sentences = [
+        f"OMG! Thanks for the {gift_name}!",
+        f"{gift_name}s, my favorite! Thank you!",
+        f"Thanks! I love {gift_name}s",
+        f"{gift_name}s! You shouldn't have!",
+        f"{gift_name}s! You're so sweet!"
+    ]
+    return random.choice(sentences)
+
