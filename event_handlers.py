@@ -65,7 +65,11 @@ def choose_thanksdialog(gift_name):
         f"{gift_name}, my favorite! Thank you!",
         f"Thanks! I love {gift_name}'s",
         f"{gift_name}'s! You shouldn't have!",
-        f"{gift_name}'s! You're so sweet!"
+        f"{gift_name}'s! You're so sweet!",
+        f"Oh! Thank you for the {gift_name}!",
+        f"{gift_name}! You're the best!",
+        f"{gift_name}! You're too kind!",
+        f"Awe, {gift_name}"
     ]
     return random.choice(sentences)
 
