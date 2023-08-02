@@ -185,5 +185,4 @@ fabric.properties
 # .idea
 /images/
 /audio/
-/gift_data.pkl
-
+gift_data.pkl
