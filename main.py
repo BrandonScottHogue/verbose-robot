@@ -1,3 +1,4 @@
+# main.py
 import asyncio
 import logging
 from TikTokLive import TikTokLiveClient
@@ -10,8 +11,6 @@ import os
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-
-
 # Instantiate the client with the user's username
 client = TikTokLiveClient(unique_id=USERNAME, enable_detailed_gifts=True)
 
@@ -21,18 +20,14 @@ gift_tracker = GiftTracker(PICKLE_FILE)
 # Instantiate the image generator
 image_generator = ImageGenerator()
 
-# Start the virtual camera
-image_generator.start_virtualcam()
-
 # Register the event handlers
 register_event_handlers(client, gift_tracker)
 
 # Create an asyncio task for the client
-client_task = asyncio.create_task(client.start())
+client_task = asyncio.ensure_future(client.start())
 
 # Create an asyncio task for the display_table coroutine
-display_table_task = asyncio.create_task(display_table(gift_tracker))
-
+display_table_task = asyncio.ensure_future(display_table(gift_tracker))
 
 # Run both tasks in the same event loop
 loop = asyncio.get_event_loop()

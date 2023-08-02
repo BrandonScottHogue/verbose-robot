@@ -45,12 +45,13 @@ def register_event_handlers(client, gift_tracker):
             # Save the image to disk
             if not os.path.exists('images'):
                 os.makedirs('images')
-            image.save(f'images/{event.user.unique_id}_{event.comment}.png')
+            image.save(
+                f'images/{event.user.unique_id}_{event.comment}.png')  # Save the image before converting to numpy array
             # Update the current_frame of the image_generator
-            image_generator.current_frame = np.array(image.convert('RGB'))
+            image_array = np.array(image.convert('RGB'))  # Convert the image to numpy array after saving
+            image_generator.current_frame = image_array
             gift_tracker.gift_data[event.user.unique_id] -= 1
-            gift_tracker.update_gift_data(user_id,
-                                          -1)  # assuming update_gift_data adds the gift_count to the existing count
+            gift_tracker.update_gift_data(user_id, -1)  # assuming update_gift_data adds the gift_count to the existing count
     @client.on('disconnect')
     async def on_disconnect(event: DisconnectEvent):
         # Log the disconnection to the console
