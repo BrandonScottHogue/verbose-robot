@@ -62,10 +62,10 @@ def register_event_handlers(client, gift_tracker):
 def choose_thanksdialog(gift_name):
     sentences = [
         f"OMG! Thanks for the {gift_name}!",
-        f"{gift_name}s, my favorite! Thank you!",
-        f"Thanks! I love {gift_name}s",
-        f"{gift_name}s! You shouldn't have!",
-        f"{gift_name}s! You're so sweet!"
+        f"{gift_name}, my favorite! Thank you!",
+        f"Thanks! I love {gift_name}'s",
+        f"{gift_name}'s! You shouldn't have!",
+        f"{gift_name}'s! You're so sweet!"
     ]
     return random.choice(sentences)
 
