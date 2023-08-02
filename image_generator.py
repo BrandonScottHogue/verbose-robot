@@ -19,9 +19,9 @@ class ImageGenerator:
 
     async def generate_image(self, prompt):
         result = await self.api.txt2img(prompt=prompt, restore_faces=True, steps=25, width=512, height=512,
-                                        enable_hr=True, hr_upscaler=webuiapi.HiResUpscaler.Latent, hr_scale=2,
-                                        hr_second_pass_steps=20, hr_resize_x=512, hr_resize_y=1024,
-                                        denoising_strength=0.1, sampler_index='euler',
+                                        enable_hr=True, hr_upscaler=webuiapi.HiResUpscaler.Latent,
+                                        hr_second_pass_steps=0, hr_resize_x=512, hr_resize_y=1024,
+                                        denoising_strength=0.75, sampler_index='euler',
                                         negative_prompt="text, ugly, tiling, poorly drawn hands, poorly drawn feet, poorly drawn face, out of frame, extra limbs, disfigured, deformed, body out of frame, bad anatomy, watermark, signature, cut off, low contrast, underexposed, overexposed, bad art, beginner, amateur, distorted face",
                                         use_async=True)
         image = result.image
