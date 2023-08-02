@@ -6,7 +6,7 @@ tts = TTS(model_name, progress_bar=True,gpu=False)
 
 def generate_speech(text):
     # Generate the speech
-    tts.tts_to_file(text=text, speaker=tts.speakers[44],emotion="Excited", file_path="audio/test.wav")
+    tts.tts_to_file(text=text, speaker=tts.speakers[41],emotion="Excited", file_path="audio/test.wav")
     playsound("audio/test.wav")
 
 def play_speech(filename):
