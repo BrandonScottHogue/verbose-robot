@@ -8,8 +8,6 @@ import random
 
 # Instantiate the image generator
 image_generator = ImageGenerator()
-user_file = open('text/user.txt', 'w', encoding="utf-8")
-comment_file = open('text/comment.txt', 'w', encoding="utf-8")
 
 def register_event_handlers(client, gift_tracker):
     # Define how you want to handle specific events via decorator
@@ -44,20 +42,20 @@ def register_event_handlers(client, gift_tracker):
         user_id = event.user.unique_id
         if gift_tracker.gift_data[user_id] > 0:
             await image_generator.generate_image(event.comment)
-            #with open('text/user.txt', 'w', encoding="utf-8") as user_file:
-            user_file.write("- " + event.user.nickname)
-            #with open('text/comment.txt', 'w', encoding="utf-8") as comment_file:
-            comment_file.write("\"" + event.comment + "\"")
+            with open('text/user.txt', 'w', encoding="utf-8") as user_file:
+                user_file.write("- " + event.user.nickname)
+            with open('text/comment.txt', 'w', encoding="utf-8") as comment_file:
+                comment_file.write("\"" + event.comment + "\"")
             gift_tracker.gift_data[event.user.unique_id] -= 1
             gift_tracker.update_gift_data(user_id,-1)  # assuming update_gift_data adds the gift_count to the existing count
-
+            tts_module.generate_speech(choose_imagedialog(event.user.nickname))
     @client.on('disconnect')
     async def on_disconnect(event: DisconnectEvent):
         # Log the disconnection to the console
         logging.info("Disconnected from the live stream")
 
         # Save the gift_data dictionary to a pickle file
-        gift_tracker.save_gift_data()
+        gift_tracker.update_gift_data()
 
     # Define handling an event via "callback"
     client.add_listener("comment", on_comment)
@@ -73,5 +71,21 @@ def choose_thanksdialog(gift_name):
         f"{gift_name}! You're the best!",
         f"{gift_name}! You're too kind!",
         f"Awe, {gift_name}"
+    ]
+    return random.choice(sentences)
+
+def choose_imagedialog(user_nickname):
+    if(str(user_nickname).startswith("user")):
+        user_nickname_choices = [
+            f"Dude",
+            f"Friend",
+            f"Guy",
+            f"Buddy"
+        ]
+        user_nickname = random.choice(user_nickname_choices)
+    sentences = [
+        f"Here's your picture {user_nickname}!",
+        f"Tada!",
+        f"I hope you like it {user_nickname}."
     ]
     return random.choice(sentences)

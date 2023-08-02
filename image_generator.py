@@ -18,7 +18,7 @@ class ImageGenerator:
         return np.array(default_image.convert('RGB'))
 
     async def generate_image(self, prompt):
-        result = await self.api.txt2img(prompt=prompt, restore_faces=True, steps=25, width=512, height=512,
+        result = await self.api.txt2img(prompt="A beautiful image of " + prompt + ", trending on art station, HDR, 4k", restore_faces=True, steps=25, width=512, height=512,
                                         enable_hr=True, hr_upscaler=webuiapi.HiResUpscaler.Latent,
                                         hr_second_pass_steps=0, hr_resize_x=512, hr_resize_y=1024,
                                         denoising_strength=0.75, sampler_index='euler',
