@@ -28,7 +28,7 @@ class ImageGenerator:
         # Save the image to disk
         if not os.path.exists('images'):
             os.makedirs('images')
-        image.save(f'images/{prompt}.png')
+        image.save(f'images/latest.png')
         self.current_frame = np.array(image.convert('RGB'))
 
     def virtualcam_loop(self):

@@ -8,6 +8,8 @@ import random
 
 # Instantiate the image generator
 image_generator = ImageGenerator()
+user_file = open('text/user.txt', 'w', encoding="utf-8")
+comment_file = open('text/comment.txt', 'w', encoding="utf-8")
 
 def register_event_handlers(client, gift_tracker):
     # Define how you want to handle specific events via decorator
@@ -42,6 +44,10 @@ def register_event_handlers(client, gift_tracker):
         user_id = event.user.unique_id
         if gift_tracker.gift_data[user_id] > 0:
             await image_generator.generate_image(event.comment)
+            #with open('text/user.txt', 'w', encoding="utf-8") as user_file:
+            user_file.write("- " + event.user.nickname)
+            #with open('text/comment.txt', 'w', encoding="utf-8") as comment_file:
+            comment_file.write("\"" + event.comment + "\"")
             gift_tracker.gift_data[event.user.unique_id] -= 1
             gift_tracker.update_gift_data(user_id,-1)  # assuming update_gift_data adds the gift_count to the existing count
 
