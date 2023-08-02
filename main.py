@@ -30,7 +30,7 @@ client_task = asyncio.ensure_future(client.start())
 display_table_task = asyncio.ensure_future(display_table(gift_tracker))
 
 # Start the virtual camera
-asyncio.create_task(image_generator.start_virtualcam())
+virtualcam_task = asyncio.ensure_future(image_generator.start_virtualcam())
 
-# Run both tasks in the same event loop
-asyncio.get_event_loop().run_until_complete(asyncio.gather(client_task, display_table_task))
+# Run all tasks in the same event loop
+asyncio.get_event_loop().run_until_complete(asyncio.gather(client_task, display_table_task, virtualcam_task))
