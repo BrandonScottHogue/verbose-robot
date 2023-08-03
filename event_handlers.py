@@ -84,8 +84,8 @@ def choose_imagedialog(user_nickname):
         ]
         user_nickname = random.choice(user_nickname_choices)
     sentences = [
-        f"Here's your picture {user_nickname}!",
-        f"Tada!",
-        f"I hope you like it {user_nickname}."
+        f"Here's your picture! I hope it's what you wanted!",
+        f"Tada! Here's your image!",
+        f"I hope you like it."
     ]
     return random.choice(sentences)

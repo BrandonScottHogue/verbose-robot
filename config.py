@@ -1,3 +1,3 @@
 # config.py
-USERNAME = "luna_asmrtist"
+USERNAME = "jessiusagiii/"
 PICKLE_FILE = 'gift_data.pkl'
