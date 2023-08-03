@@ -1,5 +1,5 @@
 # config.py
-USERNAME = "soundswithsasha"
+USERNAME = "tomwhoasmr"
 PICKLE_FILE = 'gift_data.pkl'
 OBSHOSTNAME = "127.0.0.1"
 OBSPORT = 6969

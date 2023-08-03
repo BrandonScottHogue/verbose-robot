@@ -12,13 +12,16 @@ ws.connect()
 
 # Instantiate the image generator
 image_generator = ImageGenerator()
+# Start the image generator after the event loop has started
+loop = asyncio.get_event_loop()
+loop.run_until_complete(image_generator.start())
 
 def register_event_handlers(client, gift_tracker):
     # Define how you want to handle specific events via decorator
     @client.on("connect")
     async def on_connect(_: ConnectEvent):
         print("Connected to Room ID:", client.room_id)
-        tts_module.generate_speech("Connected to room. I'm here everyone!")
+        await tts_module.generate_speech("Connected to room. I'm here everyone! Don't forget to sub to my only fans!")
         ws.call(requests.SetCurrentProgramScene(sceneName="Instructions"))
 
     @client.on("gift")
@@ -33,13 +36,13 @@ def register_event_handlers(client, gift_tracker):
             gift_tracker.update_gift_data(user_id, total_gift_value)
             print(
                 f"{event.user.unique_id} sent {gift_count}x \"{client.available_gifts[gift_id].name}\" for a total value of {total_gift_value}")
-            tts_module.generate_speech(choose_thanksdialog(client.available_gifts[gift_id].name))
+            await tts_module.generate_speech(choose_thanksdialog(client.available_gifts[gift_id].name))
         elif not event.gift.streakable:
             total_gift_value = gift_count * gift_price
             gift_tracker.update_gift_data(user_id, total_gift_value)
             print(
                 f"{event.user.unique_id} sent \"{client.available_gifts[gift_id].name}\" for a total value of {total_gift_value}")
-            tts_module.generate_speech(choose_thanksdialog(client.available_gifts[gift_id].name))
+            await tts_module.generate_speech(choose_thanksdialog(client.available_gifts[gift_id].name))
 
     # Define how you want to handle comment events
     @client.on('comment')
@@ -50,7 +53,7 @@ def register_event_handlers(client, gift_tracker):
             await image_generator.generate_image(event.comment,event.user.nickname,event.comment)
             gift_tracker.gift_data[event.user.unique_id] -= 1
             gift_tracker.update_gift_data(user_id,-1)  # assuming update_gift_data adds the gift_count to the existing count
-            tts_module.generate_speech(choose_imagedialog(event.user.nickname))
+            await tts_module.generate_speech(choose_imagedialog(event.user.nickname))
 
     @client.on('disconnect')
     async def on_disconnect(event: DisconnectEvent):
