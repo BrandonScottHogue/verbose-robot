@@ -1,10 +1,14 @@
 # event_handlers.py
+from config import OBSHOSTNAME, OBSPORT, OBSPASS
 import logging
 from TikTokLive.types.events import CommentEvent, GiftEvent, DisconnectEvent, ConnectEvent
 from image_generator import ImageGenerator
 import os
 import tts_module
 import random
+from obswebsocket import obsws, requests
+ws = obsws(OBSHOSTNAME, OBSPORT, OBSPASS)
+ws.connect()
 
 # Instantiate the image generator
 image_generator = ImageGenerator()
@@ -15,6 +19,7 @@ def register_event_handlers(client, gift_tracker):
     async def on_connect(_: ConnectEvent):
         print("Connected to Room ID:", client.room_id)
         tts_module.generate_speech("Connected to room. I'm here everyone!")
+        ws.call(requests.SetCurrentProgramScene(sceneName="Instructions"))
 
     @client.on("gift")
     async def on_gift(event: GiftEvent):
@@ -41,6 +46,7 @@ def register_event_handlers(client, gift_tracker):
     async def on_comment(event: CommentEvent):
         user_id = event.user.unique_id
         if gift_tracker.gift_data[user_id] > 0:
+            ws.call(requests.SetCurrentProgramScene(sceneName="NoOverlay"))
             await image_generator.generate_image(event.comment)
             with open('text/user.txt', 'w', encoding="utf-8") as user_file:
                 user_file.write("- " + event.user.nickname)
@@ -49,6 +55,7 @@ def register_event_handlers(client, gift_tracker):
             gift_tracker.gift_data[event.user.unique_id] -= 1
             gift_tracker.update_gift_data(user_id,-1)  # assuming update_gift_data adds the gift_count to the existing count
             tts_module.generate_speech(choose_imagedialog(event.user.nickname))
+            ws.call(requests.SetCurrentProgramScene(sceneName="Overlay"))
     @client.on('disconnect')
     async def on_disconnect(event: DisconnectEvent):
         # Log the disconnection to the console
